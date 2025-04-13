@@ -1,0 +1,52 @@
+name: Sync Default Labels
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 15 * * *'  # 15:00 AM UTC daily
+
+jobs:
+  sync-labels:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create missing labels from labels/default-labels.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          LABELS_FILE="labels/default-labels.yml"
+
+          if [ ! -f "$LABELS_FILE" ]; then
+            echo "❌ Label config file not found: $LABELS_FILE"
+            exit 1
+          fi
+
+          yq e -o=json '.labels' "$LABELS_FILE" | jq -c '.[]' | while read -r label; do
+            name=$(echo "$label" | jq -r '.name')
+            desc=$(echo "$label" | jq -r '.description // empty')
+            color=$(echo "$label" | jq -r '.color // "ededed"')
+
+            if [[ -z "$name" ]]; then
+              echo "⚠️  Skipping label with missing name"
+              continue
+            fi
+
+            echo "🔍 Checking label: $name"
+
+            if gh label list --json name | jq -r '.[].name' | grep -Fxq "$name"; then
+              echo "✅ Label '$name' already exists"
+            else
+              echo "🟢 Creating label: $name"
+              if ! gh label create "$name" --description "$desc" --color "$color"; then
+                echo "❌ Failed to create label: $name"
+                exit 1
+              fi
+            fi
+          done
