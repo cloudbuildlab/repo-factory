@@ -1,0 +1,44 @@
+name: Create GitHub Repo
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_name:
+        description: "New repository name"
+        required: true
+      private:
+        description: "Private repo? true/false"
+        required: false
+        default: "true"
+
+jobs:
+  create-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create repository using GH CLI
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          gh repo create cloudbuildlab/${{ github.event.inputs.repo_name }} \
+            --${{ github.event.inputs.private == 'true' && 'private' || 'public' }} \
+            --description "Created via repo-factory" \
+            --confirm
+
+      - name: Push default files
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          mkdir temp && cd temp
+          git init
+          echo "# ${{ github.event.inputs.repo_name }}" > README.md
+          cp ../templates/default.gitignore .gitignore
+          git add .
+          git config user.name "repo-factory[bot]"
+          git config user.email "actions@github.com"
+          git commit -m "Initial commit"
+          git branch -M main
+          git remote add origin https://x-access-token:${GH_TOKEN}@github.com/cloudbuildlab/${{ github.event.inputs.repo_name }}.git
+          git push -u origin main
