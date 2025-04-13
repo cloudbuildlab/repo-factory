@@ -1,0 +1,29 @@
+name: GitHub Teams Sync
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  sync-teams:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: GitHub Teams Sync
+        uses: actionsforge/actions-gh-teams-sync@v1
+        with:
+          config-path: .github/teams.yaml
+          dry-run: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_ORG_TOKEN }}
+
+      - name: Print test output
+        run: echo "✅ Team sync completed (dry run). This is a test message."

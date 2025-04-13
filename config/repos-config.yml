@@ -1,0 +1,10 @@
+repositories:
+  - name: test-repo-1
+    template: service-template
+    vars:
+      description: "Test repository for validation"
+      visibility: private
+      has_issues: true
+      has_projects: true
+      has_wiki: false
+      delete_branch_on_merge: true

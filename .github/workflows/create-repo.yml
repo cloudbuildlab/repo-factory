@@ -1,0 +1,17 @@
+name: Create Multiple Repositories
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-repos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Repositories
+        uses: actionsforge/actions-repo-ops@v1
+        with:
+          operation: create-bulk
+          config_file: config/repos-config.yml
+          github_token: ${{ secrets.GH_GITHUB_TOKEN }}
