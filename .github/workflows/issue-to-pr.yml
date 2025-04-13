@@ -32,6 +32,13 @@ jobs:
           echo "MEMBERS=$(extract 'members')" >> $GITHUB_ENV
           echo "PRIVACY=$(extract 'privacy')" >> $GITHUB_ENV
 
+      - name: Fail if team name is missing
+        run: |
+          if [[ -z "${{ env.TEAM_NAME }}" ]]; then
+            echo "❌ TEAM_NAME is empty. Check the issue format (expected: 'Team Name: ...')."
+            exit 1
+          fi
+          
       - name: Prepare team file
         run: |
           safe_name=$(echo "${TEAM_NAME}" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9-' '-')
@@ -81,13 +88,14 @@ jobs:
           git commit -m "Add team config for ${TEAM_NAME}"
           git push origin "$branch"
 
-          pr_url=$(gh pr create \
+          gh pr create \
             --title "Add team: ${TEAM_NAME}" \
             --body "Auto-generated from issue #${{ github.event.issue.number }}" \
             --head "$branch" \
-            --base main \
-            --json url --jq .url)
+            --base main
 
+          # Capture the PR URL after creation
+          pr_url=$(gh pr view "$branch" --json url -q .url)
           echo "PR_URL=$pr_url" >> $GITHUB_ENV
 
       - name: Comment on the issue
