@@ -1,0 +1,31 @@
+name: "🆕 Request New Repository"
+description: "Create a new GitHub repository in cloudbuildlab"
+title: "[New Repo] <your-repo-name>"
+labels: ["repo-request"]
+body:
+  - type: input
+    id: repo_name
+    attributes:
+      label: Repository Name
+      placeholder: my-new-repo
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Repository Description
+      placeholder: Short description of what the repo is for
+    validations:
+      required: false
+
+  - type: dropdown
+    id: visibility
+    attributes:
+      label: Visibility
+      options:
+        - private
+        - public
+      default: 0
+    validations:
+      required: true
