@@ -22,29 +22,42 @@ jobs:
         run: |
           body="${{ github.event.issue.body }}"
 
-          extract() {
-            echo "$body" | grep -iE "^$1[:|-]" | sed -E "s/^$1[:|-] *//I" | tr -d '\r'
+          extract_markdown() {
+            awk -v key="$1" '
+              $0 ~ "^### *"key"$" {
+                found = 1;
+                next
+              }
+              found {
+                print $0;
+                exit
+              }
+            ' <<< "$body" | tr -d '\r'
           }
 
-          echo "TEAM_NAME=$(extract 'team name')" >> $GITHUB_ENV
-          echo "DESCRIPTION=$(extract 'description')" >> $GITHUB_ENV
-          echo "MAINTAINERS=$(extract 'maintainers')" >> $GITHUB_ENV
-          echo "MEMBERS=$(extract 'members')" >> $GITHUB_ENV
-          echo "PRIVACY=$(extract 'privacy')" >> $GITHUB_ENV
+          echo "TEAM_NAME=$(extract_markdown 'Team Name')" >> $GITHUB_ENV
+          echo "DESCRIPTION=$(extract_markdown 'Description')" >> $GITHUB_ENV
+          echo "MAINTAINERS=$(extract_markdown 'Maintainers (comma-separated)')" >> $GITHUB_ENV
+          echo "MEMBERS=$(extract_markdown 'Members (comma-separated)')" >> $GITHUB_ENV
+          echo "PRIVACY=$(extract_markdown 'Team Privacy')" >> $GITHUB_ENV
 
       - name: Fail if team name is missing
         run: |
-          if [[ -z "${{ env.TEAM_NAME }}" ]]; then
-            echo "❌ TEAM_NAME is empty. Check the issue format (expected: 'Team Name: ...')."
+          if [ -z "$TEAM_NAME" ]; then
+            echo "❌ TEAM_NAME is empty. Check the issue format (expected: '### Team Name' followed by a value)."
             exit 1
           fi
-          
+        env:
+          TEAM_NAME: ${{ env.TEAM_NAME }}
+
       - name: Prepare team file
         run: |
           safe_name=$(echo "${TEAM_NAME}" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9-' '-')
           echo "SAFE_NAME=$safe_name" >> $GITHUB_ENV
           TEAM_FILE="teams/${safe_name}.yaml"
           echo "TEAM_FILE=$TEAM_FILE" >> $GITHUB_ENV
+        env:
+          TEAM_NAME: ${{ env.TEAM_NAME }}
 
       - name: Fail if team file already exists
         run: |
@@ -52,10 +65,13 @@ jobs:
             echo "❌ Team config $TEAM_FILE already exists. Aborting."
             exit 1
           fi
+        env:
+          TEAM_FILE: ${{ env.TEAM_FILE }}
 
       - name: Fail if team already exists in GitHub
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TEAM_NAME: ${{ env.TEAM_NAME }}
         run: |
           if gh team view "$TEAM_NAME" --json name &>/dev/null; then
             echo "❌ Team '$TEAM_NAME' already exists in GitHub. Aborting."
@@ -75,10 +91,20 @@ jobs:
             echo "  members:"
             echo "${MEMBERS}" | tr ',' '\n' | sed 's/^/    - /'
           } > "$TEAM_FILE"
+        env:
+          TEAM_NAME: ${{ env.TEAM_NAME }}
+          DESCRIPTION: ${{ env.DESCRIPTION }}
+          PRIVACY: ${{ env.PRIVACY }}
+          MAINTAINERS: ${{ env.MAINTAINERS }}
+          MEMBERS: ${{ env.MEMBERS }}
+          TEAM_FILE: ${{ env.TEAM_FILE }}
 
       - name: Commit and create PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TEAM_NAME: ${{ env.TEAM_NAME }}
+          SAFE_NAME: ${{ env.SAFE_NAME }}
+          TEAM_FILE: ${{ env.TEAM_FILE }}
         run: |
           git config user.name "repo-factory[bot]"
           git config user.email "actions@github.com"
@@ -94,13 +120,14 @@ jobs:
             --head "$branch" \
             --base main
 
-          # Capture the PR URL after creation
           pr_url=$(gh pr view "$branch" --json url -q .url)
           echo "PR_URL=$pr_url" >> $GITHUB_ENV
 
       - name: Comment on the issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TEAM_NAME: ${{ env.TEAM_NAME }}
+          PR_URL: ${{ env.PR_URL }}
         run: |
           gh issue comment ${{ github.event.issue.number }} \
             --body "📦 A pull request has been created to add the team **${TEAM_NAME}**: $PR_URL"
