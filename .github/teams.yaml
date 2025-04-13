@@ -1,0 +1,11 @@
+teams:
+  - name: platform-core
+    description: Platform engineering team
+    privacy: closed
+    create_default_maintainer: true
+    parent_team_id: null
+    roles:
+      - username: alice
+        role: maintainer
+      - username: bob
+        role: member
