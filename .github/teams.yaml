@@ -1,11 +1,7 @@
 teams:
-  - name: platform-core
-    description: Platform engineering team
+  - name: platform-team
+    description: Platform engineers responsible for CI/CD and infrastructure
     privacy: closed
-    create_default_maintainer: true
-    parent_team_id: null
     roles:
-      - username: alice
+      - username: jajera
         role: maintainer
-      - username: bob
-        role: member

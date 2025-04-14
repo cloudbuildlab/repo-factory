@@ -1,37 +1,29 @@
-# .github/workflows/sync-teams.yml
 name: Sync GitHub Teams
 
 on:
   push:
     branches:
       - main
-    paths:
-      - '.github/teams.yaml'
-      - 'scripts/sync-teams.ts'
   workflow_dispatch:
 
 jobs:
   sync-teams:
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
-      id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Sync GitHub Teams
+        uses: actionsforge/gh-team-sync@v1
         with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build TypeScript
-        run: npx tsc
-
-      - name: Run team sync
-        run: node dist/sync-teams.js
+          config-path: .github/teams.yaml
+          dry-run: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ORG_TOKEN }}
+
+      - name: Print test output
+        run: echo "✅ Team sync completed (dry run). This is a test message."
