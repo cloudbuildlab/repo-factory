@@ -26,4 +26,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_ORG_TOKEN }}
 
       - name: Print test output
-        run: echo "✅ Team sync completed (dry run). This is a test message."
+        run: echo "✅ Team sync completed (dry run). This is a test message"
