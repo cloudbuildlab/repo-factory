@@ -1,4 +1,4 @@
-name: Sync GitHub Teams
+name: GitHub Teams Sync
 
 on:
   push:
@@ -17,8 +17,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Sync GitHub Teams
-        uses: actionsforge/gh-team-sync@v1
+      - name: GitHub Teams Sync
+        uses: actionsforge/actions-gh-teams-sync@v1
         with:
           config-path: .github/teams.yaml
           dry-run: true
