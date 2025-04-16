@@ -21,7 +21,7 @@ jobs:
         uses: actionsforge/actions-gh-teams-sync@v1
         with:
           config-path: .github/teams.yaml
-          dry-run: false
+          dry-run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GH_ORG_TOKEN }}
 
