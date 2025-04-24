@@ -15,7 +15,13 @@ jobs:
 
       - name: Create Repository
         uses: actionsforge/actions-repo-ops@v1
+        env:
+          GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
         with:
           operation: create
-          config_file: config/repos-config.yml
-          github_token: ${{ secrets.GH_REPO_TOKEN }}
+          repository_name: service-a
+          description: "Service A Repository"
+          private: true
+          auto_init: true
+          gitignore_template: Node
+          license_template: mit
