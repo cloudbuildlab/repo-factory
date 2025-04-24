@@ -17,6 +17,7 @@ jobs:
         uses: actionsforge/actions-repo-ops@v1
         env:
           GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
+          GH_ORG_NAME: ${{ secrets.GH_ORG_NAME }}
         with:
           operation: create
           repository_name: service-a
