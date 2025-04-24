@@ -1,7 +1,11 @@
-name: Create Multiple Repositories
-
+name: Create Repository from File
 on:
   workflow_dispatch:
+    inputs:
+      config_file:
+        description: 'Path to repository configuration file'
+        required: true
+        default: 'repos.yml'
 
 jobs:
   create-repos:
@@ -9,9 +13,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create Repositories
-        uses: actionsforge/actions-repo-ops@v1
+      - name: Read config file
+        id: config
+        uses: actions/github-script@v7
         with:
-          operation: create-bulk
-          config_file: config/repos-config.yml
+          script: |
+            const yaml = require('yaml')
+            const fs = require('fs')
+            const config = yaml.parse(fs.readFileSync('${{ github.event.inputs.config_file }}', 'utf8'))
+            return config.repositories
+
+      - name: Create Repository
+        uses: actionsforge/actions-repo-ops@v1
+        env:
+          REPOS: ${{ steps.config.outputs.result }}
+        with:
+          operation: create
+          config_file: ${{ github.event.inputs.config_file }}
           github_token: ${{ secrets.GH_GITHUB_TOKEN }}
