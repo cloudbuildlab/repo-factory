@@ -30,4 +30,4 @@ jobs:
         with:
           operation: create
           config_file: ${{ github.event.inputs.config_file }}
-          github_token: ${{ secrets.GH_GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_REPO_TOKEN }}
