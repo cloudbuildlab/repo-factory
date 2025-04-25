@@ -1,5 +1,7 @@
 {
   "files.associations": {
+    "*.yml": "yaml",
+    "*.yaml": "yaml",
     "*.dockerfile": "dockerfile",
     "*.sh.tpl": "shellscript",
     "docker-compose*.yml": "yaml",
@@ -24,29 +26,45 @@
   },
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "prettier.requireConfig": true,
   "workbench.iconTheme": "vscode-icons",
   "[css]": {
     "editor.defaultFormatter": "vscode.css-language-features",
     "editor.foldingStrategy": "indentation"
   },
   "[dockerfile]": {
-      "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
   },
   "[html]": {
-    "editor.defaultFormatter": "vscode.html-language-features"
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "vscode.html-language-features",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
   },
   "[json]": {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
   },
   "[shellscript]": {
-    "editor.defaultFormatter": "foxundermoon.shell-format"
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
   },
   "[terraform]": {
-      "editor.formatOnSave": true,
-      "editor.defaultFormatter": "hashicorp.terraform",
-      "editor.tabSize": 2,
-      "editor.insertSpaces": true
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  "[yaml]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
   }
 }
