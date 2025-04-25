@@ -20,7 +20,7 @@ jobs:
   delete-repo:
     runs-on: ubuntu-latest
     env:
-      PROTECTED_REPOS: "repo-factory" # add another-critical-repo comma separated
+      PROTECTED_REPOS: "repo-factory, test" # add another-critical-repo comma separated
 
     steps:
       - name: Check confirmation
