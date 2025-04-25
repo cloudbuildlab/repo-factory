@@ -23,16 +23,6 @@ jobs:
       PROTECTED_REPOS: "repo-factory, test" # add another-critical-repo comma separated
 
     steps:
-      - name: Check confirmation
-        id: check-confirm
-        run: |
-          if [ "${{ inputs.confirm_delete }}" != "yes" ]; then
-            echo "Not confirmed, skipping deletion."
-            echo "confirmed=false" >> $GITHUB_OUTPUT
-          else
-            echo "confirmed=true" >> $GITHUB_OUTPUT
-          fi
-
       - name: Check protected repository
         id: check-protected
         run: |
@@ -54,12 +44,19 @@ jobs:
             echo "protected=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Check confirmation
+        id: check-confirm
+        if: steps.check-protected.outputs.protected == 'false'
+        run: |
+          if [ "${{ inputs.confirm_delete }}" != "yes" ]; then
+            echo "Not confirmed, skipping deletion."
+            echo "confirmed=false" >> $GITHUB_OUTPUT
+          else
+            echo "confirmed=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Delete Repository
-        if: >
-          ${{
-            steps.check-confirm.outputs.confirmed == 'true' &&
-            steps.check-protected.outputs.protected == 'false'
-          }}
+        if: steps.check-protected.outputs.protected == 'false' && steps.check-confirm.outputs.confirmed == 'true'
         uses: actionsforge/actions-repo-ops@v1
         env:
           GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
