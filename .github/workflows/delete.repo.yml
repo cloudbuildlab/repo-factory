@@ -40,7 +40,8 @@ jobs:
           is_protected=false
 
           for repo in "${PROTECTED[@]}"; do
-            if [ "$repo" = "${{ inputs.repository_name }}" ]; then
+            repo_trimmed="$(echo "$repo" | xargs)" # trim spaces
+            if [ "$repo_trimmed" = "${{ inputs.repository_name }}" ]; then
               is_protected=true
               break
             fi
