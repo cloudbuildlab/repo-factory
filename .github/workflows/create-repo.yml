@@ -1,17 +1,219 @@
-name: Create Repository from File
+name: Create Repository
+
 on:
   workflow_dispatch:
     inputs:
-      config_file:
-        description: 'Path to repository configuration file'
+      repository_name:
+        description: 'Name of the repository to create'
         required: true
-        default: 'repos.yml'
+
+      repository_description:
+        description: 'Description of the repository'
+        required: false
+        default: ''
+
+      private:
+        description: 'Make repository private?'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - true
+          - false
+
+      auto_init:
+        description: 'Initialize with README?'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - true
+          - false
+
+      gitignore_template:
+        description: 'Gitignore template'
+        required: true
+        default: 'None'
+        type: choice
+        options:
+          - AL
+          - Actionscript
+          - Ada
+          - Agda
+          - Android
+          - AppEngine
+          - AppceleratorTitanium
+          - ArchLinuxPackages
+          - Autotools
+          - Ballerina
+          - C
+          - C++
+          - CFWheels
+          - CMake
+          - CUDA
+          - CakePHP
+          - ChefCookbook
+          - Clojure
+          - CodeIgniter
+          - CommonLisp
+          - Composer
+          - Concrete5
+          - Coq
+          - CraftCMS
+          - D
+          - DM
+          - Dart
+          - Delphi
+          - Dotnet
+          - Drupal
+          - ECU-TEST
+          - EPiServer
+          - Eagle
+          - Elisp
+          - Elixir
+          - Elm
+          - Erlang
+          - ExpressionEngine
+          - ExtJs
+          - Fancy
+          - Finale
+          - Firebase
+          - FlaxEngine
+          - Flutter
+          - ForceDotCom
+          - Fortran
+          - FuelPHP
+          - GWT
+          - Gcov
+          - GitBook
+          - GitHubPages
+          - Go
+          - Godot
+          - Gradle
+          - Grails
+          - Haskell
+          - IAR
+          - IGORPro
+          - Idris
+          - JBoss
+          - JENKINS_HOME
+          - Java
+          - Jekyll
+          - Joomla
+          - Julia
+          - KiCad
+          - Kohana
+          - Kotlin
+          - LabVIEW
+          - Laravel
+          - Leiningen
+          - LemonStand
+          - Lilypond
+          - Lithium
+          - Lua
+          - Magento
+          - Maven
+          - Mercury
+          - MetaProgrammingSystem
+          - Modelica
+          - Nanoc
+          - Nim
+          - Node
+          - OCaml
+          - Objective-C
+          - Opa
+          - OpenCart
+          - OracleForms
+          - Packer
+          - Perl
+          - Phalcon
+          - PlayFramework
+          - Plone
+          - Prestashop
+          - Processing
+          - PureScript
+          - Python
+          - Qooxdoo
+          - Qt
+          - R
+          - ROS
+          - Racket
+          - Rails
+          - Raku
+          - ReScript
+          - RhodesRhomobile
+          - Ruby
+          - Rust
+          - SCons
+          - Sass
+          - Scala
+          - Scheme
+          - Scrivener
+          - Sdcc
+          - SeamGen
+          - SketchUp
+          - Smalltalk
+          - Stella
+          - SugarCRM
+          - Swift
+          - Symfony
+          - SymphonyCMS
+          - TeX
+          - Terraform
+          - Textpattern
+          - TurboGears2
+          - TwinCAT3
+          - Typo3
+          - Unity
+          - UnrealEngine
+          - VVVV
+          - VisualStudio
+          - Waf
+          - WordPress
+          - Xojo
+          - Yeoman
+          - Yii
+          - ZendFramework
+          - Zephir
+          - Zig
+          - None
+
+      license_template:
+        description: 'License template'
+        required: true
+        default: 'None'
+        type: choice
+        options:
+          - agpl-3.0
+          - apache-2.0
+          - bsd-2-clause
+          - bsd-3-clause
+          - bsl-1.0
+          - cc0-1.0
+          - epl-2.0
+          - gpl-2.0
+          - gpl-3.0
+          - lgpl-2.1
+          - mit
+          - mpl-2.0
+          - unlicense
+          - None
 
 jobs:
-  create-repos:
+  create-repo:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set optional fields
+        id: set-params
+        run: |
+          if [ "${{ inputs.gitignore_template }}" != "None" ]; then
+            echo "gitignore_template=${{ inputs.gitignore_template }}" >> $GITHUB_OUTPUT
+          fi
+          if [ "${{ inputs.license_template }}" != "None" ]; then
+            echo "license_template=${{ inputs.license_template }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create Repository
         uses: actionsforge/actions-repo-ops@v1
@@ -20,9 +222,9 @@ jobs:
           GH_ORG_NAME: ${{ secrets.GH_ORG_NAME }}
         with:
           operation: create
-          repository_name: service-a
-          description: "Service A Repository"
-          private: true
-          auto_init: true
-          gitignore_template: Node
-          license_template: mit
+          repository_name: ${{ inputs.repository_name }}
+          description: ${{ inputs.repository_description }}
+          private: ${{ inputs.private }}
+          auto_init: ${{ inputs.auto_init }}
+          gitignore_template: ${{ steps.set-params.outputs.gitignore_template }}
+          license_template: ${{ steps.set-params.outputs.license_template }}
