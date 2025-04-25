@@ -20,12 +20,50 @@ jobs:
   delete-repo:
     runs-on: ubuntu-latest
     steps:
+      - name: Check confirmation
+        id: check-confirm
+        run: |
+          if [ "${{ inputs.confirm_delete }}" != "yes" ]; then
+            echo "Not confirmed, skipping deletion."
+            echo "confirmed=false" >> $GITHUB_OUTPUT
+          else
+            echo "confirmed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check protected repository
+        id: check-protected
+        run: |
+          if [ "${{ inputs.repository_name }}" == "repo-factory" ]; then
+            echo "Cannot delete protected repository 'repo-factory'. Skipping."
+            echo "protected=true" >> $GITHUB_OUTPUT
+          elif [[ "$PROTECTED_REPOS" =~ "${{ inputs.repository_name }}" ]]; then
+            echo "protected=true" >> $GITHUB_OUTPUT
+          else
+            echo "protected=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Delete Repository
-        if: inputs.confirm_delete == 'yes'
+        if: >
+          ${{
+            steps.check-confirm.outputs.confirmed == 'true' &&
+            steps.check-protected.outputs.protected == 'false'
+          }}
         uses: actionsforge/actions-repo-ops@v1
         env:
           GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
           GH_ORG_NAME: ${{ secrets.GH_ORG_NAME }}
+          PROTECTED_REPOS: "repo-factory" # add another-critical-repo comma separated
         with:
           operation: delete
           repository_name: ${{ inputs.repository_name }}
+
+      - name: Summary
+        if: always()
+        run: |
+          if [[ "${{ steps.check-protected.outputs.protected }}" == "true" ]]; then
+            echo "::notice::Repository '${{ inputs.repository_name }}' is protected and cannot be deleted"
+          elif [[ "${{ steps.check-confirm.outputs.confirmed }}" != "true" ]]; then
+            echo "::notice::Deletion was not confirmed"
+          else
+            echo "::notice::Repository '${{ inputs.repository_name }}' was deleted"
+          fi
