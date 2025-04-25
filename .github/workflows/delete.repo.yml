@@ -19,6 +19,9 @@ on:
 jobs:
   delete-repo:
     runs-on: ubuntu-latest
+    env:
+      PROTECTED_REPOS: "repo-factory" # add another-critical-repo comma separated
+
     steps:
       - name: Check confirmation
         id: check-confirm
@@ -33,10 +36,18 @@ jobs:
       - name: Check protected repository
         id: check-protected
         run: |
-          if [ "${{ inputs.repository_name }}" == "repo-factory" ]; then
-            echo "Cannot delete protected repository 'repo-factory'. Skipping."
-            echo "protected=true" >> $GITHUB_OUTPUT
-          elif [[ "$PROTECTED_REPOS" =~ "${{ inputs.repository_name }}" ]]; then
+          IFS=',' read -ra PROTECTED <<< "${PROTECTED_REPOS}"
+          is_protected=false
+
+          for repo in "${PROTECTED[@]}"; do
+            if [ "$repo" = "${{ inputs.repository_name }}" ]; then
+              is_protected=true
+              break
+            fi
+          done
+
+          if [ "$is_protected" = true ]; then
+            echo "Repository '${{ inputs.repository_name }}' is protected. Skipping deletion."
             echo "protected=true" >> $GITHUB_OUTPUT
           else
             echo "protected=false" >> $GITHUB_OUTPUT
@@ -52,7 +63,6 @@ jobs:
         env:
           GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
           GH_ORG_NAME: ${{ secrets.GH_ORG_NAME }}
-          PROTECTED_REPOS: "repo-factory" # add another-critical-repo comma separated
         with:
           operation: delete
           repository_name: ${{ inputs.repository_name }}
