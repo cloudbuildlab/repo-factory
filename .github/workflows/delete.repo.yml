@@ -1,0 +1,31 @@
+name: Delete Repository
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository_name:
+        description: "Name of the repository to delete (this operation cannot be undone)"
+        required: true
+
+      confirm_delete:
+        description: 'Type "yes" to confirm deletion of the repository. Any other value will skip deletion.'
+        required: true
+        default: "no"
+        type: choice
+        options:
+          - "yes"
+          - "no"
+
+jobs:
+  delete-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete Repository
+        if: inputs.confirm_delete == 'yes'
+        uses: actionsforge/actions-repo-ops@v1
+        env:
+          GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
+          GH_ORG_NAME: ${{ secrets.GH_ORG_NAME }}
+        with:
+          operation: delete
+          repository_name: ${{ inputs.repository_name }}
