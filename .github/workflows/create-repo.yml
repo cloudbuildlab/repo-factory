@@ -195,10 +195,10 @@ on:
           - unlicense
           - None
 
-      homepage:
-        description: "Repository homepage URL"
-        required: false
-        default: ""
+      # homepage:
+      #   description: "Repository homepage URL"
+      #   required: false
+      #   default: ""
 
       has_issues:
         description: "Enable issues"
@@ -207,59 +207,59 @@ on:
         type: choice
         options: ["true", "false"]
 
-      has_projects:
-        description: "Enable projects"
-        required: false
-        default: "true"
-        type: choice
-        options: ["true", "false"]
+      # has_projects:
+      #   description: "Enable projects"
+      #   required: false
+      #   default: "true"
+      #   type: choice
+      #   options: ["true", "false"]
 
-      has_wiki:
-        description: "Enable wiki"
-        required: false
-        default: "true"
-        type: choice
-        options: ["true", "false"]
+      # has_wiki:
+      #   description: "Enable wiki"
+      #   required: false
+      #   default: "true"
+      #   type: choice
+      #   options: ["true", "false"]
 
-      has_discussions:
-        description: "Enable discussions"
-        required: false
-        default: "false"
-        type: choice
-        options: ["true", "false"]
+      # has_discussions:
+      #   description: "Enable discussions"
+      #   required: false
+      #   default: "false"
+      #   type: choice
+      #   options: ["true", "false"]
 
-      team_id:
-        description: "Team ID to grant access"
-        required: false
-        default: ""
+      # team_id:
+      #   description: "Team ID to grant access"
+      #   required: false
+      #   default: ""
 
-      allow_squash_merge:
-        description: "Allow squash merging"
-        required: false
-        default: "true"
-        type: choice
-        options: ["true", "false"]
+      # allow_squash_merge:
+      #   description: "Allow squash merging"
+      #   required: false
+      #   default: "true"
+      #   type: choice
+      #   options: ["true", "false"]
 
-      allow_merge_commit:
-        description: "Allow merge commits"
-        required: false
-        default: "true"
-        type: choice
-        options: ["true", "false"]
+      # allow_merge_commit:
+      #   description: "Allow merge commits"
+      #   required: false
+      #   default: "true"
+      #   type: choice
+      #   options: ["true", "false"]
 
-      allow_rebase_merge:
-        description: "Allow rebase merging"
-        required: false
-        default: "true"
-        type: choice
-        options: ["true", "false"]
+      # allow_rebase_merge:
+      #   description: "Allow rebase merging"
+      #   required: false
+      #   default: "true"
+      #   type: choice
+      #   options: ["true", "false"]
 
-      allow_auto_merge:
-        description: "Allow auto-merge"
-        required: false
-        default: "false"
-        type: choice
-        options: ["true", "false"]
+      # allow_auto_merge:
+      #   description: "Allow auto-merge"
+      #   required: false
+      #   default: "false"
+      #   type: choice
+      #   options: ["true", "false"]
 
       delete_branch_on_merge:
         description: "Delete branch after merge"
@@ -268,64 +268,64 @@ on:
         type: choice
         options: ["true", "false"]
 
-      allow_update_branch:
-        description: "Allow branch updates"
-        required: false
-        default: "false"
-        type: choice
-        options: ["true", "false"]
+      # allow_update_branch:
+      #   description: "Allow branch updates"
+      #   required: false
+      #   default: "false"
+      #   type: choice
+      #   options: ["true", "false"]
 
       default_branch:
         description: "Default branch name"
         required: false
         default: "main"
 
-      use_squash_pr_title_as_default:
-        description: "Use PR title for squash merge"
-        required: false
-        default: "false"
-        type: choice
-        options: ["true", "false"]
+      # use_squash_pr_title_as_default:
+      #   description: "Use PR title for squash merge"
+      #   required: false
+      #   default: "false"
+      #   type: choice
+      #   options: ["true", "false"]
 
-      squash_merge_commit_title:
-        description: "Squash merge commit title"
-        required: false
-        default: "PR_TITLE"
-        type: choice
-        options:
-          - PR_TITLE
-          - COMMIT_OR_PR_TITLE
-          - BLANK
+      # squash_merge_commit_title:
+      #   description: "Squash merge commit title"
+      #   required: false
+      #   default: "PR_TITLE"
+      #   type: choice
+      #   options:
+      #     - PR_TITLE
+      #     - COMMIT_OR_PR_TITLE
+      #     - BLANK
 
-      squash_merge_commit_message:
-        description: "Squash merge commit message"
-        required: false
-        default: "PR_BODY"
-        type: choice
-        options:
-          - PR_BODY
-          - COMMIT_MESSAGES
-          - BLANK
+      # squash_merge_commit_message:
+      #   description: "Squash merge commit message"
+      #   required: false
+      #   default: "PR_BODY"
+      #   type: choice
+      #   options:
+      #     - PR_BODY
+      #     - COMMIT_MESSAGES
+      #     - BLANK
 
-      merge_commit_title:
-        description: "Merge commit title"
-        required: false
-        default: "PR_TITLE"
-        type: choice
-        options:
-          - PR_TITLE
-          - MERGE_MESSAGE
-          - BLANK
+      # merge_commit_title:
+      #   description: "Merge commit title"
+      #   required: false
+      #   default: "PR_TITLE"
+      #   type: choice
+      #   options:
+      #     - PR_TITLE
+      #     - MERGE_MESSAGE
+      #     - BLANK
 
-      merge_commit_message:
-        description: "Merge commit message"
-        required: false
-        default: "PR_BODY"
-        type: choice
-        options:
-          - PR_BODY
-          - PR_TITLE
-          - BLANK
+      # merge_commit_message:
+      #   description: "Merge commit message"
+      #   required: false
+      #   default: "PR_BODY"
+      #   type: choice
+      #   options:
+      #     - PR_BODY
+      #     - PR_TITLE
+      #     - BLANK
 
 jobs:
   create-repo:
@@ -342,13 +342,13 @@ jobs:
           if [ "${{ inputs.license_template }}" != "None" ]; then
             echo "license_template=${{ inputs.license_template }}" >> $GITHUB_OUTPUT
           fi
-          [ -n "${{ inputs.homepage }}" ] && echo "homepage=${{ inputs.homepage }}" >> $GITHUB_OUTPUT
-          [ -n "${{ inputs.team_id }}" ] && echo "team_id=${{ inputs.team_id }}" >> $GITHUB_OUTPUT
+          # [ -n "${{ inputs.homepage }}" ] && echo "homepage=${{ inputs.homepage }}" >> $GITHUB_OUTPUT
+          # [ -n "${{ inputs.team_id }}" ] && echo "team_id=${{ inputs.team_id }}" >> $GITHUB_OUTPUT
           [ -n "${{ inputs.default_branch }}" ] && echo "default_branch=${{ inputs.default_branch }}" >> $GITHUB_OUTPUT
-          [ -n "${{ inputs.squash_merge_commit_title }}" ] && echo "squash_merge_commit_title=${{ inputs.squash_merge_commit_title }}" >> $GITHUB_OUTPUT
-          [ -n "${{ inputs.squash_merge_commit_message }}" ] && echo "squash_merge_commit_message=${{ inputs.squash_merge_commit_message }}" >> $GITHUB_OUTPUT
-          [ -n "${{ inputs.merge_commit_title }}" ] && echo "merge_commit_title=${{ inputs.merge_commit_title }}" >> $GITHUB_OUTPUT
-          [ -n "${{ inputs.merge_commit_message }}" ] && echo "merge_commit_message=${{ inputs.merge_commit_message }}" >> $GITHUB_OUTPUT
+          # [ -n "${{ inputs.squash_merge_commit_title }}" ] && echo "squash_merge_commit_title=${{ inputs.squash_merge_commit_title }}" >> $GITHUB_OUTPUT
+          # [ -n "${{ inputs.squash_merge_commit_message }}" ] && echo "squash_merge_commit_message=${{ inputs.squash_merge_commit_message }}" >> $GITHUB_OUTPUT
+          # [ -n "${{ inputs.merge_commit_title }}" ] && echo "merge_commit_title=${{ inputs.merge_commit_title }}" >> $GITHUB_OUTPUT
+          # [ -n "${{ inputs.merge_commit_message }}" ] && echo "merge_commit_message=${{ inputs.merge_commit_message }}" >> $GITHUB_OUTPUT
 
       - name: Create Repository
         uses: actionsforge/actions-repo-ops@v1
@@ -363,21 +363,21 @@ jobs:
           auto_init: ${{ inputs.auto_init }}
           gitignore_template: ${{ steps.set-params.outputs.gitignore_template }}
           license_template: ${{ steps.set-params.outputs.license_template }}
-          homepage: ${{ steps.set-params.outputs.homepage }}
+          # homepage: ${{ steps.set-params.outputs.homepage }}
           has_issues: ${{ inputs.has_issues }}
-          has_projects: ${{ inputs.has_projects }}
-          has_wiki: ${{ inputs.has_wiki }}
-          has_discussions: ${{ inputs.has_discussions }}
-          team_id: ${{ steps.set-params.outputs.team_id }}
-          allow_squash_merge: ${{ inputs.allow_squash_merge }}
-          allow_merge_commit: ${{ inputs.allow_merge_commit }}
-          allow_rebase_merge: ${{ inputs.allow_rebase_merge }}
-          allow_auto_merge: ${{ inputs.allow_auto_merge }}
+          # has_projects: ${{ inputs.has_projects }}
+          # has_wiki: ${{ inputs.has_wiki }}
+          # has_discussions: ${{ inputs.has_discussions }}
+          # team_id: ${{ steps.set-params.outputs.team_id }}
+          # allow_squash_merge: ${{ inputs.allow_squash_merge }}
+          # allow_merge_commit: ${{ inputs.allow_merge_commit }}
+          # allow_rebase_merge: ${{ inputs.allow_rebase_merge }}
+          # allow_auto_merge: ${{ inputs.allow_auto_merge }}
           delete_branch_on_merge: ${{ inputs.delete_branch_on_merge }}
-          allow_update_branch: ${{ inputs.allow_update_branch }}
+          # allow_update_branch: ${{ inputs.allow_update_branch }}
           default_branch: ${{ steps.set-params.outputs.default_branch }}
-          use_squash_pr_title_as_default: ${{ inputs.use_squash_pr_title_as_default }}
-          squash_merge_commit_title: ${{ steps.set-params.outputs.squash_merge_commit_title }}
-          squash_merge_commit_message: ${{ steps.set-params.outputs.squash_merge_commit_message }}
-          merge_commit_title: ${{ steps.set-params.outputs.merge_commit_title }}
-          merge_commit_message: ${{ steps.set-params.outputs.merge_commit_message }}
+          # use_squash_pr_title_as_default: ${{ inputs.use_squash_pr_title_as_default }}
+          # squash_merge_commit_title: ${{ steps.set-params.outputs.squash_merge_commit_title }}
+          # squash_merge_commit_message: ${{ steps.set-params.outputs.squash_merge_commit_message }}
+          # merge_commit_title: ${{ steps.set-params.outputs.merge_commit_title }}
+          # merge_commit_message: ${{ steps.set-params.outputs.merge_commit_message }}
