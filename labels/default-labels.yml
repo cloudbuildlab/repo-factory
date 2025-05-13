@@ -1,8 +1,4 @@
 labels:
-  - name: team-request
-    description: "Triggers team creation PR"
-    color: "0366d6"
-
   - name: automation
     description: "Managed by GitHub Actions"
     color: "5319e7"
