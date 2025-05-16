@@ -2,3 +2,6 @@ labels:
   - name: automation
     description: "Managed by GitHub Actions"
     color: "5319e7"
+  - name: teams
+    description: "Changes related to GitHub team configuration"
+    color: "0e8a16"
