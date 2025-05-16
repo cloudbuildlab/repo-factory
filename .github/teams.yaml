@@ -11,3 +11,9 @@ teams:
     roles:
       - username: jajera
         role: maintainer
+  - name: test
+    description: Temporary team for testing permissions and automation
+    privacy: closed
+    roles:
+      - username: jajera
+        role: maintainer
